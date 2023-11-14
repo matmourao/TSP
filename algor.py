@@ -24,3 +24,32 @@ def opt(M):
     
     # retorna o menor deles
     return min(ciclos)
+
+def nearest_neighbor(matrix):
+    n = len(matrix)
+    
+    # inicializa o ciclo com um vértice "aleatório" e o peso
+    cycle = [0]
+    weight = 0
+    
+    while len(cycle) < n:
+        current_vertex = cycle[-1] # último elemento adicionado ao ciclo
+        min_distance = max(matrix[current_vertex]) + 1
+
+        # encontra o vizinho mais próximo
+        for neighbor in range(n):
+            if neighbor not in cycle:
+                distance = matrix[current_vertex][neighbor]
+                if distance < min_distance:
+                    min_distance = distance
+                    nearest_neighbor = neighbor
+        
+        # adiciona o vizinho mais próximo ao ciclo e contabiliza o peso
+        cycle.append(nearest_neighbor)
+        weight += min_distance
+    
+    # adiciona a aresta final para formar um ciclo e contabiliza o peso
+    cycle.append(cycle[0])
+    weight += matrix[0][cycle[-2]]
+    
+    return cycle, weight
