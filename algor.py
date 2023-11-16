@@ -1,4 +1,5 @@
 from randgraph import *
+import numpy as np
 import itertools
 
 def opt(M):
@@ -52,4 +53,40 @@ def nearest_neighbor(matrix):
     cycle.append(cycle[0])
     weight += matrix[0][cycle[-2]]
     
+    return cycle, weight
+
+def savings(matrix):
+    n = len(matrix)
+
+    # constroi a matriz de economias
+    S = np.zeros((n,n))
+    for i in range(1, n):
+        for j in range(i+1,n):
+            S[i,j] = matrix[i][0] + matrix[0][j] - matrix[i][j]
+    
+    # calcula o primeiro ciclo
+    idx = np.unravel_index(np.argmax(S, axis=None), S.shape)
+    cycle = list(idx) # ignora o vertice 0 por enquanto
+    S[idx] = 0
+
+    # constroi o resto do ciclo (sem o 0 ainda)
+    while(len(cycle) < n-1):
+        idx = np.unravel_index(np.argmax(S, axis=None), S.shape)
+        if cycle[0] in idx:
+            aux = list(idx)
+            aux.remove(cycle[0])
+            cycle = aux + cycle
+        elif cycle[-1] in  idx:
+            aux = list(idx)
+            aux.remove(cycle[-1])
+            cycle = cycle + aux
+        else:
+            S[idx] = 0  
+
+    # fecha o ciclo e calcula seu peso total
+    cycle = [0] + cycle + [0]
+    weight = 0
+    for i in range(len(cycle)-1):
+        weight += matrix[cycle[i]][cycle[i+1]]
+
     return cycle, weight
