@@ -6,13 +6,13 @@ def urandgraph(n, m):
     # com pesos aleatorios
     # distribuidos por uma uniforme de 0 a m
 
-    matriz = [[0 for i in range(5)] for j in range(5)]
+    matrix = [[0 for i in range(n)] for j in range(n)]
     # inicializa a matriz de adjacencias
 
     for i in range(n):
         for j in range(i+1,n):
-            matriz[i][j] = m*rand.random()
-            matriz[j][i] = matriz[i][j]
+            matrix[i][j] = m*rand.random()
+            matrix[j][i] = matrix[i][j]
 
-    return matriz
+    return matrix
 
