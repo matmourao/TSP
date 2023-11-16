@@ -6,7 +6,7 @@ def urandgraph(n, m):
     # com pesos aleatorios
     # distribuidos por uma uniforme de 0 a m
 
-    matriz = M = [[0 for i in range(5)] for j in range(5)]
+    matriz = [[0 for i in range(5)] for j in range(5)]
     # inicializa a matriz de adjacencias
 
     for i in range(n):
