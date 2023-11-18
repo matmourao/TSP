@@ -111,12 +111,12 @@ def cheapest_edge(matrix):
         for j in range(i+1,n):
             S[i,j] = matrix[i][0] + matrix[0][j] - matrix[i][j]
     idx = np.unravel_index(np.argmax(S, axis=None), S.shape)
-    cycle = list(idx) # ignora o vertice 0 por enquanto
+    cycle = [0] + list(idx) # sem o ultimo vertice por enquanto
 
     # define o conjunto V dos vertices fora do ciclo
     V = [x for x in range(1,n) if x not in idx]
 
-    # constroi o resto do ciclo (sem o 0 ainda)
+    # constroi o resto do ciclo
     while(len(V) > 0):
 
         # acha o vertice mais barato a ser inserido
@@ -138,9 +138,13 @@ def cheapest_edge(matrix):
         V.remove(vertex)
 
     # fecha o ciclo e calcula seu peso total
-    cycle = [0] + cycle + [0]
+    cycle = cycle + [0]
     weight = 0
     for i in range(len(cycle)-1):
         weight += matrix[cycle[i]][cycle[i+1]]
 
     return cycle, weight
+
+M = urandgraph(5,10)
+print(savings(M))
+print(cheapest_edge(M))
