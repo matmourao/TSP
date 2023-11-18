@@ -63,15 +63,25 @@ def savings(matrix):
     for i in range(1, n):
         for j in range(i+1,n):
             S[i,j] = matrix[i][0] + matrix[0][j] - matrix[i][j]
-    
+    S = np.triu(S) + np.tril(S.T, 1)
+
     # calcula o primeiro ciclo
     idx = np.unravel_index(np.argmax(S, axis=None), S.shape)
     cycle = list(idx) # ignora o vertice 0 por enquanto
-    S[idx] = 0
-
+    S[idx] = np.NINF
+    S[(idx[1], idx[0])] = np.NINF
+    
     # constroi o resto do ciclo (sem o 0 ainda)
     while(len(cycle) < n-1):
-        idx = np.unravel_index(np.argmax(S, axis=None), S.shape)
+        # acha a aresta de maior economia a ser inserida
+        max = np.NINF
+        for i in [x for x in range(1,n) if x not in cycle]:
+            for j in [cycle[0], cycle[-1]]:
+                if S[i][j] > max:
+                    idx = (i,j)
+                    max = S[idx]
+            
+        # adiciona a aresta no ciclo
         if cycle[0] in idx:
             aux = list(idx)
             aux.remove(cycle[0])
@@ -80,8 +90,52 @@ def savings(matrix):
             aux = list(idx)
             aux.remove(cycle[-1])
             cycle = cycle + aux
-        else:
-            S[idx] = 0  
+        
+        S[idx] = np.NINF
+        S[(idx[1], idx[0])] = np.NINF
+   
+    # fecha o ciclo e calcula seu peso total
+    cycle = [0] + cycle + [0]
+    weight = 0
+    for i in range(len(cycle)-1):
+        weight += matrix[cycle[i]][cycle[i+1]]
+
+    return cycle, weight
+
+def cheapest_edge(matrix):
+    n = len(matrix)
+
+    # controi o primeiro ciclo
+    S = np.zeros((n,n))
+    for i in range(1, n):
+        for j in range(i+1,n):
+            S[i,j] = matrix[i][0] + matrix[0][j] - matrix[i][j]
+    idx = np.unravel_index(np.argmax(S, axis=None), S.shape)
+    cycle = list(idx) # ignora o vertice 0 por enquanto
+
+    # define o conjunto V dos vertices fora do ciclo
+    V = [x for x in range(1,n) if x not in idx]
+
+    # constroi o resto do ciclo (sem o 0 ainda)
+    while(len(V) > 0):
+
+        # acha o vertice mais barato a ser inserido
+        min = np.inf
+        for t in range(len(cycle)-1):
+            i = cycle[t]
+            j = cycle[t+1]
+            for k in V:
+                cost = matrix[i][k] + matrix[k][j] - matrix[i][j]
+                if cost < min:
+                    min = cost
+                    vertex = k
+                    idx = t
+        
+        # insere as respectivas arestas no ciclo
+        cycle.insert(idx+1, vertex)
+
+        # remove o vertice de V
+        V.remove(vertex)
 
     # fecha o ciclo e calcula seu peso total
     cycle = [0] + cycle + [0]
