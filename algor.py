@@ -144,7 +144,3 @@ def cheapest_edge(matrix):
         weight += matrix[cycle[i]][cycle[i+1]]
 
     return cycle, weight
-
-M = urandgraph(5,10)
-print(savings(M))
-print(cheapest_edge(M))
