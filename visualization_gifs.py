@@ -1,9 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 from matplotlib import image as mpimg
 from opt_algorithms import *
 from algor import *
-from matplotlib.animation import FuncAnimation
+
 
 image = mpimg.imread("./img/map.png")
 
@@ -35,20 +36,10 @@ for i in range(n):
 # Usando um dos algoritmos de eurísticas conwtrutivas para ter uma rota
 route, _ = nearest_neighbor(matrix)
 
+########## GIF 2-opt ############
 
 # Aplicando o algoritmo 2-opt para melhorar a rota
 _, list_routes = two_opt(matrix, route)
-
-# plotando e salvando todas as rotas
-for i in range(len(list_routes)):
-    route = list_routes[i]
-    plt.imshow(image)
-    plt.plot(city_list[route, 0], city_list[route, 1], 'C0', zorder=1)
-    plt.scatter(city_list[route, 0], city_list[route, 1], zorder=2)
-    plt.savefig(f"./img/route{i}.png")
-    plt.clf()
-
-# criando o gif
 
 # Configurando a figura para a animação
 fig, ax = plt.subplots()
@@ -56,7 +47,7 @@ fig, ax = plt.subplots()
 def update(frame):
     route = list_routes[frame]
     ax.clear()
-    ax.imshow(image)  # 'image' deve ser substituído pela sua imagem de fundo, se houver
+    ax.imshow(image)  
     ax.plot(city_list[route, 0], city_list[route, 1], 'C0', zorder=1)
     ax.scatter(city_list[route, 0], city_list[route, 1], zorder=2)
     ax.set_title(f'Route {frame}')
@@ -65,4 +56,23 @@ def update(frame):
 ani = FuncAnimation(fig, update, frames=len(list_routes), repeat=False)
 
 # Salvando a animação
-ani.save('route_animation.gif', writer='imagemagick', fps=3)
+ani.save('animation2_OPT.gif', writer='imagemagick', fps=1)
+
+########## GIF 3-opt ############
+
+_, list_routes3 = three_opt(matrix, route)
+
+
+fig, ax = plt.subplots()
+
+def update(frame):
+    route = list_routes3[frame]
+    ax.clear()
+    ax.imshow(image)  
+    ax.plot(city_list[route, 0], city_list[route, 1], 'C0', zorder=1)
+    ax.scatter(city_list[route, 0], city_list[route, 1], zorder=2)
+    ax.set_title(f'Route {frame}')
+
+ani = FuncAnimation(fig, update, frames=len(list_routes3), repeat=False)
+
+ani.save('animation3_OPT.gif', writer='imagemagick', fps=1)

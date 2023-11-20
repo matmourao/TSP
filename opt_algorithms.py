@@ -14,7 +14,7 @@ def cost(route, matrix):
 
 # função que aplica o algoritmo 2-opt dada a matriz de adjacencia e a rota a ser melhorada
 def two_opt(matrix, route):
-    list_routes = [route]
+    list_routes = [route] # Lista que armazena todas as rotas geradas
     best_route = route
     improved = True
     while improved:
@@ -29,6 +29,30 @@ def two_opt(matrix, route):
                     best_route = new_route
                     improved = True
 
+        if improved:
+            list_routes.append(best_route)
+        route = best_route
+
+    return best_route, list_routes
+
+# função que aplica o algoritmo 3-opt dada a matriz de adjacencia e a rota a ser melhorada
+def three_opt(matrix, route):
+    list_routes = [route] # Lista que armazena todas as rotas geradas
+    best_route = route
+    improved = True
+    while improved:
+        improved = False
+        for i in range(1, len(route) - 3):
+            for j in range(i+1, len(route) - 2):
+                for k in range(j+1, len(route)):
+                    new_route = route.copy()
+                    new_route[i:j] = route[j-1:i-1:-1]
+                    new_route[j:k] = route[k-1:j-1:-1]
+                    new_cost = cost(new_route, matrix)
+
+                    if new_cost < cost(best_route, matrix):
+                        best_route = new_route
+                        improved = True
         if improved:
             list_routes.append(best_route)
         route = best_route

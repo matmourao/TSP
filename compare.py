@@ -1,5 +1,5 @@
 from randgraph import *
-from opt_alorithms import *
+from opt_algorithms import *
 
 def u_compare(n, m, k):
     # compara os algoritmos com
