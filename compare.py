@@ -10,33 +10,8 @@ def u_compare(n, m, k):
     # ordem: 
     # nearest neighbor
     # cheapest edge
-    # chritofides
+    # christofides
     # savings
-
-    results = []
-    for i in range(k):
-        M = urandgraph(n,m)
-        weights = [nearest_neighbor(M)[1],
-                   cheapest_edge(M)[1],
-                   m*n, #christofides
-                   savings(M)[1]]
-        mini = min(weights)
-        percents = [100*x/mini - 100 for x in weights]
-        results.append(percents)
-
-    final_result = []
-    for i in range(4):
-        percent = 0
-        for r in results:
-            percent += r[i]
-
-        percent = percent/k
-        final_result.append(percent)
-    
-    return final_result
-
-def u_compare_opt(n, m, k):
-    # faz a mesma coisa mas compara com o algoritmo otimo
 
     results = []
     for i in range(k):
@@ -68,7 +43,7 @@ def u_measure_opt2(n, m, k):
     # ordem:
     # nearest neighbor
     # cheapest edge
-    # chritofides
+    # christofides
     # savings
     
     results = []
@@ -122,8 +97,7 @@ def u_measure_opt3(n, m, k):
     
     return final_result
 
-print(u_measure_opt2(22, 99, 99))
-print(u_measure_opt3(22, 99, 99))
+print(u_compare(10, 100, 1000))
 
 
 
