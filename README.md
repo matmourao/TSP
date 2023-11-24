@@ -1,7 +1,7 @@
 # TSP
 ## Arquivos
 [algor.py](algor.py): implementação dos algoritmos construtivos e o algoritmo ótimo; \
-[compare.py](compare.py): faz a comparação dos algoritmos (ao ser executado faz os mesmos teste feitos na confecção do trabalho)\
+[compare.py](compare.py): faz a comparação dos algoritmos (ao ser executado faz os mesmos teste feitos na confecção do trabalho);\
 [gif.md](gif.md): visualização dos gifs referenciados no trabalho;\
 [inefficiency.py](inefficiency.py): testa o tempo levado para rodar o algoritmo ótimo;\
 [opt_algorithms.py](opt_algorithms.py): implementação dos algoritmos de melhoria;\
