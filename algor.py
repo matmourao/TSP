@@ -144,3 +144,58 @@ def cheapest_edge(matrix):
         weight += matrix[cycle[i]][cycle[i+1]]
 
     return cycle, weight
+
+def christofides(matrix):
+    # passo 1: encontra um circuito euleriano no grafo
+    n = len(matrix)
+    circuit = [0]
+    current_vertex = 0
+
+    while len(circuit) < n:
+        # encontra um vértice adjacente não visitado
+        next_vertex = np.argmax(matrix[current_vertex])
+        if matrix[current_vertex][next_vertex] > 0:
+            circuit.append(next_vertex)
+            matrix[current_vertex][next_vertex] = 0
+            matrix[next_vertex][current_vertex] = 0
+            current_vertex = next_vertex
+
+    # passo 2: encontra vértices de grau ímpar no circuito euleriano
+    degree = np.zeros(len(matrix), dtype=int)
+    for edge in circuit:
+        degree[edge] += 1
+
+    odd_vertices = [vertex for vertex in range(len(degree)) if degree[vertex] % 2 != 0]
+
+    # passo 3: encontra um matching perfeito mínimo entre os vértices de grau ímpar
+    matching = []
+    visited = set()
+
+    for vertex in odd_vertices:
+        if vertex not in visited:
+            min_weight = np.inf
+            min_neighbor = None
+
+            for neighbor in odd_vertices:
+                if vertex != neighbor and neighbor not in visited and matrix[vertex][neighbor] < min_weight:
+                    min_weight = matrix[vertex][neighbor]
+                    min_neighbor = neighbor
+
+            matching.append((vertex, min_neighbor))
+            visited.update([vertex, min_neighbor])
+
+    # passo 4: combina o circuito euleriano com o matching perfeito mínimo
+    cycle = circuit
+    for edge in matching:
+        vertex = edge[0]
+        if vertex in cycle:
+            index = cycle.index(vertex)
+            cycle.insert(index + 1, edge[1])
+        else:
+            index = cycle.index(edge[1])
+            cycle.insert(index + 1, vertex)
+
+    # calcula o comprimento do caminho
+    weight = sum(matrix[cycle[i]][cycle[i + 1]] for i in range(len(cycle) - 1)) + matrix[cycle[-1]][cycle[0]]
+
+    return cycle, weight
