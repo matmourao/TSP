@@ -56,7 +56,7 @@ def update(frame):
 ani = FuncAnimation(fig, update, frames=len(list_routes), repeat=False)
 
 # Salvando a animação
-ani.save('animation2_OPT.gif', writer='imagemagick', fps=1)
+ani.save('./img/animation2_OPT.gif', writer='imagemagick', fps=1)
 
 ########## GIF 3-opt ############
 
@@ -75,4 +75,142 @@ def update(frame):
 
 ani = FuncAnimation(fig, update, frames=len(list_routes3), repeat=False)
 
-ani.save('animation3_OPT.gif', writer='imagemagick', fps=1)
+ani.save('./img/animation3_OPT.gif', writer='imagemagick', fps=1)
+
+########## GIF 2-opt vs 3-opt ############
+
+fig, ax = plt.subplots()
+
+def update(frame):
+    route = list_routes[frame]
+    route3 = list_routes3[frame]
+    ax.clear()
+    ax.imshow(image)  
+    ax.plot(city_list[route, 0], city_list[route, 1], 'C0', zorder=1)
+    ax.plot(city_list[route3, 0], city_list[route3, 1], 'C1', zorder=1)
+    ax.scatter(city_list[route, 0], city_list[route, 1], zorder=2)
+    ax.scatter(city_list[route3, 0], city_list[route3, 1], zorder=2)
+    ax.legend(['2-opt', '3-opt'])
+    ax.set_title(f'Route {frame}')
+
+ani = FuncAnimation(fig, update, frames=len(list_routes), repeat=False)
+
+ani.save('./img/animation2vs3_OPT.gif', writer='imagemagick', fps=1)
+
+
+#### Utilizando savings #####
+
+rota_2, _ = savings(matrix)
+
+
+_, l2 = two_opt(matrix, rota_2)
+
+fig, ax = plt.subplots()
+
+
+def update(frame):
+    route = l2[frame]
+    ax.clear()
+    ax.imshow(image)  
+    ax.plot(city_list[route, 0], city_list[route, 1], 'C0', zorder=1)
+    ax.scatter(city_list[route, 0], city_list[route, 1], zorder=2)
+    ax.set_title(f'Route {frame}')
+
+ani = FuncAnimation(fig, update, frames=len(l2), repeat=False)
+
+ani.save('./img/animation2_OPT_savings.gif', writer='imagemagick', fps=1)
+
+_, l3 = three_opt(matrix, rota_2)
+
+fig, ax = plt.subplots()
+
+def update(frame):
+    route = l3[frame]
+    ax.clear()
+    ax.imshow(image)  
+    ax.plot(city_list[route, 0], city_list[route, 1], 'C0', zorder=1)
+    ax.scatter(city_list[route, 0], city_list[route, 1], zorder=2)
+    ax.set_title(f'Route {frame}')
+
+ani = FuncAnimation(fig, update, frames=len(l3), repeat=False)
+
+ani.save('./img/animation3_OPT_savings.gif', writer='imagemagick', fps=1)
+
+
+# comparando 2-opt e 3-opt
+fig, ax = plt.subplots()
+
+def update(frame):
+    route = l2[frame]
+    route3 = l3[frame]
+    ax.clear()
+    ax.imshow(image)  
+    ax.plot(city_list[route, 0], city_list[route, 1], 'C0', zorder=1)
+    ax.plot(city_list[route3, 0], city_list[route3, 1], 'C1', zorder=1)
+    ax.scatter(city_list[route, 0], city_list[route, 1], zorder=2)
+    ax.scatter(city_list[route3, 0], city_list[route3, 1], zorder=2)
+    ax.legend(['2-opt', '3-opt'])
+    ax.set_title(f'Route {frame}')
+
+ani = FuncAnimation(fig, update, frames=len(l2), repeat=False)
+
+ani.save('./img/animation2vs3_OPT_savings.gif', writer='imagemagick', fps=1)
+
+### cheapest edge ###
+
+rota_3, _ = cheapest_edge(matrix)
+
+# 2-opt
+_, l2_chped = two_opt(matrix, rota_3)
+
+fig, ax = plt.subplots()
+
+def update(frame):
+    route = l2_chped[frame]
+    ax.clear()
+    ax.imshow(image)  
+    ax.plot(city_list[route, 0], city_list[route, 1], 'C0', zorder=1)
+    ax.scatter(city_list[route, 0], city_list[route, 1], zorder=2)
+    ax.set_title(f'Route {frame}')
+
+ani = FuncAnimation(fig, update, frames=len(l2_chped), repeat=False)
+
+ani.save('./img/animation2_OPT_cheapest_edge.gif', writer='imagemagick', fps=1)
+
+# 3-opt
+_, l3_chped = three_opt(matrix, rota_3)
+
+fig, ax = plt.subplots()
+
+def update(frame):
+    route = l3_chped[frame]
+    ax.clear()
+    ax.imshow(image)  
+    ax.plot(city_list[route, 0], city_list[route, 1], 'C0', zorder=1)
+    ax.scatter(city_list[route, 0], city_list[route, 1], zorder=2)
+    ax.set_title(f'Route {frame}')
+
+ani = FuncAnimation(fig, update, frames=len(l3_chped), repeat=False)
+
+ani.save('./img/animation3_OPT_cheapest_edge.gif', writer='imagemagick', fps=1)
+
+# comparando 2-opt e 3-opt
+fig, ax = plt.subplots()
+
+def update(frame):
+    route = l2_chped[frame]
+    route3 = l3_chped[frame]
+    ax.clear()
+    ax.imshow(image)  
+    ax.plot(city_list[route, 0], city_list[route, 1], 'C0', zorder=1)
+    ax.plot(city_list[route3, 0], city_list[route3, 1], 'C1', zorder=1)
+    ax.scatter(city_list[route, 0], city_list[route, 1], zorder=2)
+    ax.scatter(city_list[route3, 0], city_list[route3, 1], zorder=2)
+    ax.legend(['2-opt', '3-opt'])
+    ax.set_title(f'Route {frame}')
+
+ani = FuncAnimation(fig, update, frames=len(l2_chped), repeat=False)
+
+ani.save('./img/animation2vs3_OPT_cheapest_edge.gif', writer='imagemagick', fps=1)
+
+
