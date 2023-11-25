@@ -10,7 +10,6 @@ def u_compare(n, m, k):
     # ordem: 
     # nearest neighbor
     # cheapest edge
-    # christofides
     # savings
 
     results = []
@@ -18,14 +17,13 @@ def u_compare(n, m, k):
         M = urandgraph(n,m)
         weights = [nearest_neighbor(M)[1],
                    cheapest_edge(M)[1],
-                   m*n, #christofides
                    savings(M)[1]]
         mini = opt(M)
         percents = [100*x/mini - 100 for x in weights]
         results.append(percents)
 
     final_result = []
-    for i in range(4):
+    for i in range(3):
         percent = 0
         for r in results:
             percent += r[i]
@@ -43,7 +41,6 @@ def u_measure_opt2(n, m, k):
     # ordem:
     # nearest neighbor
     # cheapest edge
-    # christofides
     # savings
     
     results = []
@@ -51,16 +48,15 @@ def u_measure_opt2(n, m, k):
         M = urandgraph(n, m)
         routes = [nearest_neighbor(M)[0],
                    cheapest_edge(M)[0],
-                   list(range(n)) + [0], #christofides
                    savings(M)[0]]
         weights = [cost(x,M) for x in routes]
         improved = [two_opt(M, x)[0] for x in routes]
     
-        measures = [100*(x - cost(y,M))/x for x in weights for y in improved]
+        measures = [100*(weights[x] - cost(improved[x],M))/weights[x] for x in range(3)]
         results.append(measures)
     
     final_result = []
-    for i in range(4):
+    for i in range(3):
         percent = 0
         for r in results:
             percent += r[i]
@@ -78,16 +74,15 @@ def u_measure_opt3(n, m, k):
         M = urandgraph(n, m)
         routes = [nearest_neighbor(M)[0],
                    cheapest_edge(M)[0],
-                   list(range(n)) + [0], #christofides
                    savings(M)[0]]
         weights = [cost(x,M) for x in routes]
         improved = [three_opt(M, x)[0] for x in routes]
-        
-        measures = [100*(x - cost(y,M))/x for x in weights for y in improved]
+    
+        measures = [100*(weights[x] - cost(improved[x],M))/weights[x] for x in range(3)]
         results.append(measures)
     
     final_result = []
-    for i in range(4):
+    for i in range(3):
         percent = 0
         for r in results:
             percent += r[i]
@@ -97,9 +92,24 @@ def u_measure_opt3(n, m, k):
     
     return final_result
 
-print(u_compare(10, 100, 1000))
 
+algoritmos = ["Vizinho mais próximo: ", "Aresta mais barata: ", "Clark e Wright: "]
 
+compare = u_compare(10, 100, 1000) 
+for i in range(3):
+    print(algoritmos[i], "{:.2f}".format(compare[i]), "% distante da solução ótima em média")
+
+print("="*80)
+print("2-OPT: ")
+measure_2 = u_measure_opt2(20,100,1000)
+for i in range(3):
+    print(algoritmos[i], "melhorado em ", "{:.2f}".format(measure_2[i]), "% em média")
+
+print("="*80)
+print("3-OPT: ")
+measure_3 = u_measure_opt3(20,100,1000)
+for i in range(3):
+    print(algoritmos[i], "melhorado em ", "{:.2f}".format(measure_3[i]), "% em média")
 
 
 
